@@ -50,8 +50,8 @@ const CompletedOrderTable = () => {
                                     completeOrder.reverse().slice(0,5).map((item) => {
                                         return (
                                             <Tr key={item._id}>
-                                                <Td fontWeight="bold" fontSize="80%" border="1px solid black">{item.Qty}</Td>
                                                 <Td fontWeight="bold" fontSize="80%" border="1px solid black">{item.Price}</Td>
+                                                <Td fontWeight="bold" fontSize="80%" border="1px solid black">{item.Qty}</Td>
                                             </Tr>
                                         );
                                     })
