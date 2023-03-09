@@ -156,10 +156,10 @@ const AddData = () => {
       }
       else {
         console.log("pendigstate", pendingState);
-          dispatch(addPending(pendingState)).then(() => {
-            dispatch(getPending());
-            dispatch(getCompleteOrder());
-          });
+        dispatch(addPending(pendingState)).then(() => {
+          dispatch(getPending());
+          dispatch(getCompleteOrder());
+        });
       }
       dispatch(getPending());
       dispatch(getCompleteOrder()).then(() => setPendingState({ type: "reset" }));
@@ -189,7 +189,6 @@ const AddData = () => {
       })
       setTimeout(() => setPendingState({ type: "reset" }), 500);
     }
-
     onClose();
   };
 
