@@ -24,11 +24,16 @@ const PendingOrderTable = () => {
     }, [dispatch, pendingOrderData, pendingOrderData.length]);
 
     return (
-        <Box width="80%" margin="auto">
-            <Text>Pending Order Table</Text>
-            <Box display="flex">
+        <Box width="70%" margin="auto">
+            <Text
+                fontSize={{base: "120%", sm: "150%", md: "170%", lg: "180%", xl: "200%"}}
+                padding="2%"
+                fontWeight="bold"
+                color="darkgreen"
+            >Pending Order Table</Text>
+            <Box backgroundColor="white" display="flex" padding="2%" boxShadow="rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px">
                 <TableContainer width="50%">
-                    <Table variant='simple'>
+                    <Table size='sm' variant='simple'>
                         <Thead>
                             <Tr>
                                 <Th color="black" fontWeight="bold" border="1px solid black">Buyer Qty</Th>
@@ -45,7 +50,7 @@ const PendingOrderTable = () => {
                                     pendingOrderData.filter((el) => el.Type === "Buyer").reverse().slice(0, 5).map((item) => {
                                         return (
                                             <Tr key={item._id}>
-                                                <Td color="blue" fontWeight="bold" border="1px solid black">{item.Qty}</Td>
+                                                <Td height="fit-content" color="blue" fontWeight="bold" border="1px solid black">{item.Qty}</Td>
                                                 <Td color="blue" fontWeight="bold" border="1px solid black">{item.Price}</Td>
                                             </Tr>
                                         );
@@ -58,7 +63,7 @@ const PendingOrderTable = () => {
 
 
                 <TableContainer width="50%">
-                    <Table variant='simple'>
+                    <Table size='sm' variant='simple'>
                         <Thead>
                             <Tr>
                                 <Th color="black" fontWeight="bold" border="1px solid black" >Seller Price</Th>

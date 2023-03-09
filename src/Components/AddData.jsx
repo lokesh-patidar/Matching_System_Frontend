@@ -189,7 +189,7 @@ const AddData = () => {
 
   return (
     <>
-      <Button onClick={onOpen}>Add Buyer Data</Button>
+      <Button marginTop="2%" onClick={onOpen} colorScheme="teal">Add Data</Button>
 
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

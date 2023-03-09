@@ -24,11 +24,16 @@ const CompletedOrderTable = () => {
     }, [dispatch, completeOrder, completeOrder.length]);
 
     return (
-        <Box width="80%" margin="auto">
-            <Text>Complete Order Table</Text>
+        <Box width="50%" margin="auto">
+            <Text
+                fontSize={{base: "120%", sm: "130%", md: "140%", lg: "150%", xl: "180%"}}
+                padding="1.5%"
+                fontWeight="bold"
+                color="darkgreen"
+            >Complete Order Table</Text>
             <Box>
-                <TableContainer>
-                    <Table variant='simple'>
+                <TableContainer backgroundColor="white" padding="2%" boxShadow="rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px">
+                    <Table size='sm' variant='simple'>
                         <Thead>
                             <Tr>
                                 <Th border="1px solid black">Price</Th>
@@ -45,8 +50,8 @@ const CompletedOrderTable = () => {
                                     completeOrder.reverse().slice(0,5).map((item) => {
                                         return (
                                             <Tr key={item._id}>
-                                                <Td border="1px solid black">{item.Qty}</Td>
-                                                <Td border="1px solid black">{item.Price}</Td>
+                                                <Td fontWeight="bold" fontSize="80%" border="1px solid black">{item.Qty}</Td>
+                                                <Td fontWeight="bold" fontSize="80%" border="1px solid black">{item.Price}</Td>
                                             </Tr>
                                         );
                                     })
