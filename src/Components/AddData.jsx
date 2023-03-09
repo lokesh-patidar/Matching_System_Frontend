@@ -12,6 +12,8 @@ import {
   FormLabel,
   Input,
   Select,
+  useToast,
+  Box,
 } from '@chakra-ui/react';
 import { useEffect, useReducer } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -54,6 +56,7 @@ const AddData = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
+  const toast = useToast();
   const [pendingState, setPendingState] = useReducer(
     Reducer,
     initialState
@@ -63,130 +66,162 @@ const AddData = () => {
 
   const AddHandler = (pendingState, onClose) => {
 
-    console.log("pending state:- ", pendingState);
-    let checkedItem = pendingOrderData.find((item) => item.Price === pendingState.Price);
+    if (pendingState.Type !== "" && pendingState.Qty !== "" && pendingState.Price !== "") {
+      console.log("pending state:- ", pendingState);
+      let checkedItem = pendingOrderData.find((item) => item.Price === pendingState.Price);
 
-    if(checkedItem && checkedItem.Type === pendingState.Type){
-      dispatch(updatePending(checkedItem._id, pendingState))
-      .then(() => {
-        dispatch(getPending());
-        dispatch(getCompleteOrder());
-      });
-    }
+      if (checkedItem && checkedItem.Type === pendingState.Type) {
+        dispatch(updatePending(checkedItem._id, pendingState))
+          .then(() => {
+            dispatch(getPending());
+            dispatch(getCompleteOrder());
+          });
+      }
 
-    if (checkedItem && pendingState.Type === "Buyer") {
-      console.log("inside buyer");
-      if (checkedItem.Price === pendingState.Price && checkedItem.Qty === pendingState.Qty && checkedItem.Type === "Seller") {
-        dispatch(addCompleteOrder(pendingState));
-        dispatch(deletePending(checkedItem._id))
-          .then(() => {
-            dispatch(getPending());
-            dispatch(getCompleteOrder());
-          })
+      if (checkedItem && pendingState.Type === "Buyer") {
+        console.log("inside buyer");
+        if (checkedItem.Price === pendingState.Price && checkedItem.Qty === pendingState.Qty && checkedItem.Type === "Seller") {
+          dispatch(addCompleteOrder(pendingState));
+          dispatch(deletePending(checkedItem._id))
+            .then(() => {
+              dispatch(getPending());
+              dispatch(getCompleteOrder());
+            })
+        }
+        else if (checkedItem.Price === pendingState.Price && checkedItem.Qty < pendingState.Qty && checkedItem.Type === "Seller") {
+          let newQty = pendingState.Qty - checkedItem.Qty;
+          let newPendingState = {
+            Type: pendingState.Type,
+            Qty: newQty,
+            Price: pendingState.Price
+          };
+          let newCompleteState = {
+            Type: pendingState.Type,
+            Qty: checkedItem.Qty,
+            Price: pendingState.Price
+          };
+          console.log("new Buyer PendingState1:", newPendingState);
+          // dispatch(updatePending(checkedItem._id, newPendingState));
+          dispatch(deletePending(checkedItem._id));
+          dispatch(addPending(newPendingState));
+          dispatch(addCompleteOrder(newCompleteState))
+            .then(() => {
+              dispatch(getPending());
+              dispatch(getCompleteOrder());
+            })
+        }
+        else if (checkedItem.Price === pendingState.Price && checkedItem.Qty > pendingState.Qty && checkedItem.Type === "Seller") {
+          let newQty = checkedItem.Qty - pendingState.Qty;
+          let newPendingState = {
+            Type: "Seller",
+            Qty: newQty,
+            Price: pendingState.Price
+          };
+          let newCompleteState = {
+            Type: pendingState.Type,
+            Qty: pendingState.Qty,
+            Price: pendingState.Price
+          };
+          console.log("new Seller PendingState1:", newPendingState);
+          dispatch(updatePending(checkedItem._id, newPendingState));
+          dispatch(addCompleteOrder(newCompleteState))
+            .then(() => {
+              dispatch(getPending());
+              dispatch(getCompleteOrder());
+            });
+        }
       }
-      else if (checkedItem.Price === pendingState.Price && checkedItem.Qty < pendingState.Qty && checkedItem.Type === "Seller") {
-        let newQty = pendingState.Qty - checkedItem.Qty;
-        let newPendingState = {
-          Type: pendingState.Type,
-          Qty: newQty,
-          Price: pendingState.Price
-        };
-        let newCompleteState = {
-          Type: pendingState.Type,
-          Qty: checkedItem.Qty,
-          Price: pendingState.Price
-        };
-        console.log("new Buyer PendingState1:", newPendingState);
-        dispatch(updatePending(checkedItem._id, newPendingState));
-        dispatch(addCompleteOrder(newCompleteState))
-          .then(() => {
-            dispatch(getPending());
-            dispatch(getCompleteOrder());
-          })
+      else if (checkedItem && pendingState.Type === "Seller") {
+        if (checkedItem.Price === pendingState.Price && checkedItem.Qty === pendingState.Qty && checkedItem.Type === "Buyer") {
+          dispatch(addCompleteOrder(pendingState));
+          dispatch(deletePending(checkedItem._id))
+            .then(() => {
+              dispatch(getPending());
+              dispatch(getCompleteOrder());
+            })
+        }
+        else if (checkedItem.Price === pendingState.Price && checkedItem.Qty < pendingState.Qty && checkedItem.Type === "Buyer") {
+          let newQty = pendingState.Qty - checkedItem.Qty;
+          let newPendingState = {
+            Type: pendingState.Type,
+            Qty: newQty,
+            Price: pendingState.Price
+          };
+          let newCompleteState = {
+            Type: pendingState.Type,
+            Qty: checkedItem.Qty,
+            Price: pendingState.Price
+          };
+          console.log("new seller PendingState2:", newPendingState);
+          // dispatch(updatePending(checkedItem._id, newPendingState));
+          dispatch(deletePending(checkedItem._id));
+          dispatch(addPending(newPendingState));
+          dispatch(addCompleteOrder(newCompleteState))
+            .then(() => {
+              dispatch(getPending());
+              dispatch(getCompleteOrder());
+            });
+        }
+        else if (checkedItem.Price === pendingState.Price && checkedItem.Qty > pendingState.Qty && checkedItem.Type === "Buyer") {
+          let newQty = checkedItem.Qty - pendingState.Qty;
+          let newPendingState = {
+            Type: "Buyer",
+            Qty: newQty,
+            Price: pendingState.Price
+          };
+          let newCompleteState = {
+            Type: pendingState.Type,
+            Qty: pendingState.Qty,
+            Price: pendingState.Price
+          };
+          console.log("new buyer PendingState2:", newPendingState);
+          dispatch(updatePending(checkedItem._id, newPendingState))
+          dispatch(addCompleteOrder(newCompleteState))
+            .then(() => {
+              dispatch(getPending());
+              dispatch(getCompleteOrder());
+            });
+        }
       }
-      else if (checkedItem.Price === pendingState.Price && checkedItem.Qty > pendingState.Qty && checkedItem.Type === "Seller") {
-        let newQty = checkedItem.Qty - pendingState.Qty;
-        let newPendingState = {
-          Type: "Seller",
-          Qty: newQty,
-          Price: pendingState.Price
-        };
-        let newCompleteState = {
-          Type: pendingState.Type,
-          Qty: pendingState.Qty,
-          Price: pendingState.Price
-        };
-        console.log("new Seller PendingState1:", newPendingState);
-        dispatch(updatePending(checkedItem._id, newPendingState));
-        dispatch(addCompleteOrder(newCompleteState))
+      else {
+        console.log("else");
+        dispatch(addPending(pendingState))
           .then(() => {
             dispatch(getPending());
             dispatch(getCompleteOrder());
           });
       }
-    }
-    else if (checkedItem && pendingState.Type === "Seller") {
-      if (checkedItem.Price === pendingState.Price && checkedItem.Qty === pendingState.Qty && checkedItem.Type === "Buyer") {
-        dispatch(addCompleteOrder(pendingState));
-        dispatch(deletePending(checkedItem._id))
-          .then(() => {
-            dispatch(getPending());
-            dispatch(getCompleteOrder());
-          })
-      }
-      else if (checkedItem.Price === pendingState.Price && checkedItem.Qty < pendingState.Qty && checkedItem.Type === "Buyer") {
-        let newQty = pendingState.Qty - checkedItem.Qty;
-        let newPendingState = {
-          Type: pendingState.Type,
-          Qty: newQty,
-          Price: pendingState.Price
-        };
-        let newCompleteState = {
-          Type: pendingState.Type,
-          Qty: checkedItem.Qty,
-          Price: pendingState.Price
-        };
-        console.log("new seller PendingState2:", newPendingState);
-        dispatch(updatePending(checkedItem._id, newPendingState));
-        dispatch(addCompleteOrder(newCompleteState))
-          .then(() => {
-            dispatch(getPending());
-            dispatch(getCompleteOrder());
-          });
-      }
-      else if (checkedItem.Price === pendingState.Price && checkedItem.Qty > pendingState.Qty && checkedItem.Type === "Buyer") {
-        let newQty = checkedItem.Qty - pendingState.Qty;
-        let newPendingState = {
-          Type: "Buyer",
-          Qty: newQty,
-          Price: pendingState.Price
-        };
-        let newCompleteState = {
-          Type: pendingState.Type,
-          Qty: pendingState.Qty,
-          Price: pendingState.Price
-        };
-        console.log("new buyer PendingState2:", newPendingState);
-        dispatch(updatePending(checkedItem._id, newPendingState))
-        dispatch(addCompleteOrder(newCompleteState))
-          .then(() => {
-            dispatch(getPending());
-            dispatch(getCompleteOrder());
-          });
-      }
+      dispatch(getPending());
+      dispatch(getCompleteOrder())
+        .then(() => setPendingState({ type: "reset" }));
+
     }
     else {
-      console.log("else");
-      dispatch(addPending(pendingState))
-        .then(() => {
-          dispatch(getPending());
-          dispatch(getCompleteOrder());
-        });
+      toast({
+        title: "Data !",
+        description: "Data can not be added!.",
+        status: "warning",
+        duration: 2000,
+        position: "top",
+        isClosable: true,
+        render: () => (
+          <Box
+            border="1px solid green"
+            textAlign="center"
+            borderRadius="10px"
+            fontWeight="bolder"
+            color="white"
+            p={3}
+            bg="red.500"
+            boxShadow="rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px"
+          >
+            {`All fields are not there!`}
+          </Box>
+        ),
+      })
+      setTimeout(() => setPendingState({ type: "reset" }), 500);
     }
-    dispatch(getPending());
-    dispatch(getCompleteOrder())
-    .then(() => setPendingState({ type: "reset" }));
-    
+
     onClose();
   };
 
