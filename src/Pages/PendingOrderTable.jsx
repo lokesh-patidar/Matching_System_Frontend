@@ -10,26 +10,18 @@ import {
 } from '@chakra-ui/react';
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getBuyer, getSeller } from "../Redux/action";
+import { getPending } from "../Redux/action";
 
 const PendingOrderTable = () => {
 
     const dispatch = useDispatch();
-    const buyerData = useSelector(store => store.buyers);
-    const sellerData = useSelector(store => store.sellers);
-
+    const pendingOrderData = useSelector(store => store.pendingOrder);
 
     useEffect(() => {
-        if(buyerData.length === 0){
-            dispatch(getBuyer());
+        if (pendingOrderData.length === 0) {
+            dispatch(getPending());
         }
-    },[dispatch, buyerData, buyerData.length]);
-
-    useEffect(() => {
-        if (sellerData.length === 0) {
-            dispatch(getSeller());
-        }
-    }, [dispatch, sellerData, sellerData.length]);
+    }, [dispatch, pendingOrderData, pendingOrderData.length]);
 
     return (
         <Box width="80%" margin="auto">
@@ -38,23 +30,23 @@ const PendingOrderTable = () => {
                 <TableContainer width="50%">
                     <Table variant='simple'>
                         <Thead>
-                            <Tr border="1px solid black">
-                                <Th border="1px solid black">Buyer Qty</Th>
-                                <Th border="1px solid black">Buyer Price</Th>
+                            <Tr>
+                                <Th color="black" fontWeight="bold" border="1px solid black">Buyer Qty</Th>
+                                <Th color="black" fontWeight="bold" border="1px solid black">Buyer Price</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
                             {
-                                buyerData.length === 0 ? (
+                                pendingOrderData.length === 0 ? (
                                     <Tr>
                                         <Td>Loading...</Td>
                                     </Tr>
                                 ) : (
-                                    buyerData.slice(0, 5).map((item) => {
+                                    pendingOrderData.slice(0, 5).map((item) => {
                                         return (
                                             <Tr key={item._id}>
-                                                <Td border="1px solid black">{item.BuyerQty}</Td>
-                                                <Td border="1px solid black">{item.BuyerPrice}</Td>
+                                                <Td color="blue" fontWeight="bold" border="1px solid black">{item.Qty}</Td>
+                                                <Td color="blue" fontWeight="bold" border="1px solid black">{item.Price}</Td>
                                             </Tr>
                                         );
                                     })
@@ -69,22 +61,22 @@ const PendingOrderTable = () => {
                     <Table variant='simple'>
                         <Thead>
                             <Tr>
-                                <Th border="1px solid black">Seller Price</Th>
-                                <Th border="1px solid black">Seller Qty</Th>
+                                <Th color="black" fontWeight="bold" border="1px solid black" >Seller Price</Th>
+                                <Th color="black" border="1px solid black" fontWeight="bold">Seller Qty</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
                             {
-                                sellerData.length === 0 ? (
+                                pendingOrderData.length === 0 ? (
                                     <Tr>
                                         <Td>Loading...</Td>
                                     </Tr>
                                 ) : (
-                                    sellerData.slice(0, 5).map((item) => {
+                                    pendingOrderData.slice(0, 5).map((item) => {
                                         return (
                                             <Tr key={item._id}>
-                                                <Td border="1px solid black">{item.SellerPrice}</Td>
-                                                <Td border="1px solid black">{item.SellerQty}</Td>
+                                                <Td color="red" fontWeight="bold" border="1px solid black">{item.Price}</Td>
+                                                <Td color="red" fontWeight="bold" border="1px solid black">{item.Qty}</Td>
                                             </Tr>
                                         );
                                     })
