@@ -47,7 +47,7 @@ const PendingOrderTable = () => {
                                         <Td>Loading...</Td>
                                     </Tr>
                                 ) : (
-                                    pendingOrderData.filter((el) => el.Type === "Buyer").reverse().slice(0, 5).map((item) => {
+                                    pendingOrderData.filter((el) => el.Type === "Buyer").reverse().sort((a, b) => b.Price - a.Price).slice(0, 5).map((item) => {
                                         return (
                                             <Tr key={item._id}>
                                                 <Td height="fit-content" color="blue" fontWeight="bold" border="1px solid black">{item.Qty}</Td>
@@ -77,7 +77,7 @@ const PendingOrderTable = () => {
                                         <Td>Loading...</Td>
                                     </Tr>
                                 ) : (
-                                    pendingOrderData.filter((el) => el.Type === "Seller").reverse().slice(0, 5).map((item) => {
+                                    pendingOrderData.filter((el) => el.Type === "Seller").reverse().sort((a, b) => a.Price - b.Price).slice(0, 5).map((item) => {
                                         return (
                                             <Tr key={item._id}>
                                                 <Td color="red" fontWeight="bold" border="1px solid black">{item.Price}</Td>

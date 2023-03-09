@@ -32,7 +32,7 @@ const CompletedOrderTable = () => {
                 color="darkgreen"
             >Complete Order Table</Text>
             <Box>
-                <TableContainer backgroundColor="white" padding="2%" boxShadow="rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px">
+                <TableContainer backgroundColor="white" padding="3%" boxShadow="rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px">
                     <Table size='sm' variant='simple'>
                         <Thead>
                             <Tr>
