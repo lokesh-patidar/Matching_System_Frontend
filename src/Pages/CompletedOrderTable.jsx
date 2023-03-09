@@ -42,7 +42,7 @@ const CompletedOrderTable = () => {
                                         <Td>Loading...</Td>
                                     </Tr>
                                 ) : (
-                                    completeOrder.slice(0, 5).map((item) => {
+                                    completeOrder.reverse().slice(0,5).map((item) => {
                                         return (
                                             <Tr key={item._id}>
                                                 <Td border="1px solid black">{item.Qty}</Td>
