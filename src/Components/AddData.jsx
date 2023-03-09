@@ -44,9 +44,7 @@ const Reducer = (state, action) => {
         Price: Number(action.payload),
       };
     case "reset":
-      return {
-        initialState
-      }
+      return initialState;
     default:
       return state;
   }
@@ -186,7 +184,9 @@ const AddData = () => {
         });
     }
     dispatch(getPending());
-    dispatch(getCompleteOrder());
+    dispatch(getCompleteOrder())
+    .then(() => setPendingState({ type: "reset" }));
+    
     onClose();
   };
 
