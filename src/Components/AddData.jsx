@@ -68,6 +68,14 @@ const AddData = () => {
     console.log("pending state:- ", pendingState);
     let checkedItem = pendingOrderData.find((item) => item.Price === pendingState.Price);
 
+    if(checkedItem && checkedItem.Type === pendingState.Type){
+      dispatch(updatePending(checkedItem._id, pendingState))
+      .then(() => {
+        dispatch(getPending());
+        dispatch(getCompleteOrder());
+      });
+    }
+
     if (checkedItem && pendingState.Type === "Buyer") {
       if (checkedItem.Price === pendingState.Price && checkedItem.Qty === pendingState.Qty && checkedItem.Type === "Seller") {
         dispatch(addCompleteOrder(pendingState));
