@@ -77,6 +77,7 @@ const AddData = () => {
     }
 
     if (checkedItem && pendingState.Type === "Buyer") {
+      console.log("inside buyer");
       if (checkedItem.Price === pendingState.Price && checkedItem.Qty === pendingState.Qty && checkedItem.Type === "Seller") {
         dispatch(addCompleteOrder(pendingState));
         dispatch(deletePending(checkedItem._id))
