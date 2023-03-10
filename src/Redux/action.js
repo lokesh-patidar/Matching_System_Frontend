@@ -18,7 +18,7 @@ const deletePending = (id) => (dispatch) => {
     return axios.delete(`https://faithful-clam-veil.cyclic.app/pending/delete/${id}`)
         .then((res) => {
             dispatch({ type: types.DELETE_PENDING_SUCCESS, payload: res.data });
-            console.log("deleted pending", res.data);
+            // console.log("deleted pending", res.data);
         })
         .catch((err) => {
             dispatch({ type: types.DELETE_PENDING_FAILURE });
@@ -31,7 +31,7 @@ const addPending = (payload) => (dispatch) => {
         .then((res) => {
             dispatch({ type: types.ADD_PENDING_SUCCESS, payload: res.data });
             console.log("Pending Added", res.data);
-            console.log("payload:", payload);
+            console.log("pending-payload:", payload);
         })
         .catch((err) => {
             dispatch({ type: types.ADD_PENDING_FAILURE });
@@ -43,8 +43,8 @@ const updatePending = (id, payload) => (dispatch) => {
     return axios.patch(`https://faithful-clam-veil.cyclic.app/pending/update/${id}`, payload)
         .then((res) => {
             dispatch({ type: types.UPDATE_PENDING_SUCCESS, payload: res.data });
-            console.log("Pending Added", res.data);
-            console.log("payload:", payload);
+            // console.log("Pending Added", res.data);
+            // console.log("payload:", payload);
         })
         .catch((err) => {
             dispatch({ type: types.UPDATE_PENDING_FAILURE });
@@ -57,7 +57,7 @@ const getCompleteOrder = () => (dispatch) => {
     return axios.get(`https://faithful-clam-veil.cyclic.app/complete`)
         .then((res) => {
             dispatch({ type: types.GET_COMPLETE_ORDER_SUCCESS, payload: res.data });
-            console.log("completeOrderData:-", res.data);
+            // console.log("completeOrderData:-", res.data);
         })
         .catch((err) => {
             dispatch({ type: types.GET_COMPLETE_ORDER_FAILURE });
@@ -69,8 +69,8 @@ const addCompleteOrder = (payload) => (dispatch) => {
     return axios.post(`https://faithful-clam-veil.cyclic.app/complete/add`, payload)
         .then((res) => {
             dispatch({ type: types.ADD_COMPLETE_ORDER_SUCCESS, payload: res.data });
-            console.log("complete:-", res.data);
-            console.log("payload:", payload);
+            // console.log("complete:-", res.data);
+            // console.log("payload:", payload);
         })
         .catch((err) => {
             dispatch({ type: types.ADD_COMPLETE_ORDER_FAILURE });

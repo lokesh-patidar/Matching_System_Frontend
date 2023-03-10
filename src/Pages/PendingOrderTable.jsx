@@ -23,6 +23,27 @@ const PendingOrderTable = () => {
         }
     }, [dispatch, pendingOrderData, pendingOrderData.length]);
 
+    let buyerMax = 0;
+    let sellerMin = Infinity;
+
+    useEffect(() => {
+        pendingOrderData.filter((el) => el.Type === "Seller").map((item) => {
+            if (sellerMin > item.Price) {
+                sellerMin = item.Price;
+            }
+            localStorage.setItem("sellerMin", sellerMin);
+        });
+        pendingOrderData.filter((el) => el.Type === "Buyer").map((item) => {
+            if (buyerMax < item.Price) {
+                buyerMax = item.Price;
+            }
+            localStorage.setItem("buyerMax", buyerMax);
+        })
+        console.log("sellerMin", sellerMin);
+        console.log("buyerMax", buyerMax);
+
+    }, [buyerMax, sellerMin, pendingOrderData.length, pendingOrderData]);
+
     return (
         <Box width="70%" margin="auto">
             <Text

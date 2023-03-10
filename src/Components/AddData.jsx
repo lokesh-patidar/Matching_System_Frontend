@@ -77,12 +77,25 @@ const AddData = () => {
             Qty: checkedItem.Qty,
             Price: checkedItem.Price
           };
-          console.log(newState);
+          console.log("Buyer:--- if pending qty is greater than cheked");
+          let newBuyerData = {
+            Type: pendingState.Type,
+            Qty: pendingState.Qty - checkedItem.Qty,
+            Price: checkedItem.Price
+          }
+          console.log("newState",newState);
+          console.log("newBuyerData",newBuyerData);
           dispatch(addCompleteOrder(newState));
           dispatch(deletePending(checkedItem._id)).then(() => {
             dispatch(getPending());
             dispatch(getCompleteOrder());
           });
+          let sellerMin = localStorage.getItem("sellerMin");
+          if(newBuyerData.Price <= sellerMin){
+            console.log("newbuyer price is less then or equals to sellerMin");
+            console.log("new buyer added");
+            dispatch(addPending(newBuyerData));
+          }
         }
         else if (checkedItem.Qty > pendingState.Qty) {
           let newState = {
@@ -90,6 +103,7 @@ const AddData = () => {
             Qty: pendingState.Qty,
             Price: checkedItem.Price
           };
+          console.log("Buyer:--- if pending qty is lesser than cheked");
           dispatch(addCompleteOrder(newState));
           dispatch(deletePending(checkedItem._id)).then(() => {
             dispatch(getPending());
@@ -97,6 +111,7 @@ const AddData = () => {
           });
         }
         else {
+          console.log("Buyer:--- qty is equal");
           dispatch(addCompleteOrder(pendingState));
           dispatch(deletePending(checkedItem._id)).then(() => {
             dispatch(getPending());
@@ -111,8 +126,16 @@ const AddData = () => {
             Qty: checkedItem.Qty,
             Price: checkedItem.Price
           };
-          console.log(newState);
-          dispatch(addCompleteOrder(newState))
+          // let newQty = pendingState.Qty - checkedItem.Qty;
+          // let newSellerData = {
+          //   Type: pendingState.Type,
+          //   Qty: newQty,
+          //   Price: checkedItem.Price
+          // }
+          console.log("Seller:--- if pending qty is greater than cheked")
+          console.log("newState",newState);
+          dispatch(addCompleteOrder(newState));
+          // dispatch(addPending(newSellerData));
           dispatch(deletePending(checkedItem._id)).then(() => {
             dispatch(getPending());
             dispatch(getCompleteOrder());
@@ -124,7 +147,8 @@ const AddData = () => {
             Qty: pendingState.Qty,
             Price: checkedItem.Price
           };
-          console.log(newState);
+          console.log("Seller:--- if pending qty is lesser than cheked")
+          console.log("newState",newState);
           dispatch(addCompleteOrder(newState));
           dispatch(deletePending(checkedItem._id)).then(() => {
             dispatch(getPending());
@@ -155,12 +179,51 @@ const AddData = () => {
         });
       }
       else {
+
         console.log("pendigstate", pendingState);
-        dispatch(addPending(pendingState)).then(() => {
-          dispatch(getPending());
-          dispatch(getCompleteOrder());
-        });
+        let buyerMax = localStorage.getItem("buyerMax");
+        let sellermin = localStorage.getItem("sellerMin");
+
+        if(pendingState.Type === "Seller" && buyerMax < pendingState.Price){
+          dispatch(addPending(pendingState)).then(() => {
+            dispatch(getPending());
+            dispatch(getCompleteOrder());
+          });
+        }
+        else if(pendingState.Type === "Buyer" && sellermin > pendingState.Price){
+          dispatch(addPending(pendingState)).then(() => {
+            dispatch(getPending());
+            dispatch(getCompleteOrder());
+          });
+        }
+        else{
+          toast({
+            title: "Data !",
+            description: "Data can not be added!.",
+            status: "warning",
+            duration: 2000,
+            position: "top",
+            isClosable: true,
+            render: () => (
+              <Box
+                border="1px solid green"
+                textAlign="center"
+                borderRadius="10px"
+                fontWeight="bolder"
+                color="white"
+                p={3}
+                bg="red.500"
+                boxShadow="rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px"
+              >
+                {`Price overlapping!!`}
+              </Box>
+            ),
+          })
+          setTimeout(() => setPendingState({ type: "reset" }), 500);
+        }
       }
+
+
       dispatch(getPending());
       dispatch(getCompleteOrder()).then(() => setPendingState({ type: "reset" }));
     }
@@ -197,6 +260,12 @@ const AddData = () => {
       dispatch(getPending());
     }
   }, [dispatch, pendingOrderData, pendingOrderData.length]);
+
+
+  // useEffect(() => {
+  //    console.log("buyerMax", localStorage.getItem("buyerMax"));
+  //    console.log("sellerMax", localStorage.getItem("sellerMax"));
+  // },[])
 
   return (
     <>
