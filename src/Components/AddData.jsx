@@ -90,12 +90,12 @@ const AddData = () => {
             dispatch(getPending());
             dispatch(getCompleteOrder());
           });
-          // let sellerMin = localStorage.getItem("sellerMin");
-          // if(newBuyerData.Price <= sellerMin){
-          //   console.log("newbuyer price is less then or equals to sellerMin");
-          //   console.log("new buyer added");
-          //   dispatch(addPending(newBuyerData));
-          // }
+          let sellerMin = localStorage.getItem("sellerMin");
+          if(newBuyerData.Price <= sellerMin){
+            console.log("newbuyer price is less then or equals to sellerMin");
+            console.log("new buyer added");
+            dispatch(addPending(newBuyerData));
+          }
         }
         else if (checkedItem.Qty > pendingState.Qty) {
           let newState = {
